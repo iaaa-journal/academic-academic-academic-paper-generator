@@ -8,13 +8,14 @@ export default async (req, res) => {
   switch (req.method) {
     case "POST":
       let job;
+      const { coreConcept, authorName, affiliation, texCode } = req.body;
       job = await cloudConvert.jobs
         .create({
           tasks: {
             "import-tex": {
               operation: "import/base64",
-              file: req.body.texCode.base64,
-              filename: "tex-test.tex",
+              file: texCode.base64,
+              filename: `${coreConcept}-by-${authorName}-from-${affiliation}.tex`,
             },
             "convert-tex-to-pdf": {
               operation: "convert",
@@ -32,7 +33,9 @@ export default async (req, res) => {
           },
         })
         .then(async (thisRes) => {
+          // console.log(thisRes);
           job = await cloudConvert.jobs.wait(thisRes.tasks[0].job_id);
+          console.log("waiting");
           const exportTask = job.tasks.filter(
             (task) =>
               task.operation === "export/url" && task.status === "finished"

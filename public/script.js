@@ -1,4 +1,7 @@
+let pdfurl = "";
+
 const visibilityChanger = (element_id) => {
+  console.log(element_id);
   return function (visible) {
     document.getElementById(element_id).style.display = visible
       ? "block"
@@ -6,14 +9,11 @@ const visibilityChanger = (element_id) => {
   };
 };
 
-const postTex = async (TexBase64) => {
-  const url = "/api/tex-to-pdf";
+const showLoadingIndicator = visibilityChanger("running");
+const showOpenButton = visibilityChanger("tab_open_pdf");
 
-  let data = {
-    texCode: {
-      base64: TexBase64,
-    },
-  };
+const postTex = async (data) => {
+  const url = "/api/tex-to-pdf";
 
   // Default options are marked with *
   const response = await fetch(url, {
@@ -32,6 +32,7 @@ const postTex = async (TexBase64) => {
 };
 
 document.getElementById("compile").addEventListener("click", function (e) {
+  showLoadingIndicator(true);
   // get inputs
   let inputCoreConcept = document.getElementById("inputCoreConcept").value;
   let inputCoreConcept_wordCount = WordCount(inputCoreConcept);
@@ -142,9 +143,26 @@ document.getElementById("compile").addEventListener("click", function (e) {
       unescape(encodeURIComponent(modified_latex_code))
     );
 
-    // console.log(modified_latex_code_base64);
-    postTex(modified_latex_code_base64).then((data) => {
-      console.log(data);
+    let data = {
+      coreConcept: inputCoreConcept,
+      authorName: inputAuthorName,
+      affiliation: inputAffiliation,
+      texCode: {
+        base64: modified_latex_code_base64,
+      },
+    };
+    console.log(data);
+
+    postTex(data).then((data) => {
+      pdfurl = data.pdfurl;
+      showLoadingIndicator(false);
+      showOpenButton(true);
     });
   }
+});
+
+document.getElementById("open_pdf_btn").addEventListener("click", (e) => {
+  showOpenButton(false);
+  console.log("new pdf at " + pdfurl);
+  window.open(pdfurl);
 });
