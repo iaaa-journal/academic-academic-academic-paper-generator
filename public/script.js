@@ -6,7 +6,15 @@ const visibilityChanger = (element_id) => {
   };
 };
 
-const postTex = async (url = "/api", data = {}) => {
+const postTex = async (TexBase64) => {
+  const url = "/api/tex-to-pdf";
+
+  let data = {
+    texCode: {
+      base64: TexBase64,
+    },
+  };
+
   // Default options are marked with *
   const response = await fetch(url, {
     method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -17,7 +25,6 @@ const postTex = async (url = "/api", data = {}) => {
       "Content-Type": "application/json",
       // 'Content-Type': 'application/x-www-form-urlencoded',
     },
-    redirect: "follow", // manual, *follow, error
     referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
     body: JSON.stringify(data), // body data type must match "Content-Type" header
   });
@@ -44,7 +51,7 @@ document.getElementById("compile").addEventListener("click", function (e) {
   }
 
   let inputCoreConceptWSpace = inputCoreConceptNoMark + " ";
-  console.log(inputCoreConceptWSpace);
+  // console.log(inputCoreConceptWSpace);
 
   //https://stackoverflow.com/questions/18679576/counting-words-in-string/30335883
   function WordCount(str) {
@@ -130,11 +137,14 @@ document.getElementById("compile").addEventListener("click", function (e) {
         generated_content
       );
     }
-    console.log(modified_latex_code);
-    console.log(btoa(unescape(encodeURIComponent(modified_latex_code))));
 
-    fetch("http://example.com/movies.json")
-      .then((response) => response.json())
-      .then((data) => console.log(data));
+    const modified_latex_code_base64 = btoa(
+      unescape(encodeURIComponent(modified_latex_code))
+    );
+
+    console.log(modified_latex_code_base64);
+    // postTex(modified_latex_code_base64).then((data) => {
+    //   console.log(data);
+    // });
   }
 });

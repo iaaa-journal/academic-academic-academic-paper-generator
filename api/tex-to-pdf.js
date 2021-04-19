@@ -2,15 +2,12 @@ import Status from "http-status-codes";
 import CloudConvert from "cloudconvert";
 
 const CLOUDCOVERT_API = process.env.CLOUDCOVERT_API;
-console.log(CLOUDCOVERT_API);
 const cloudConvert = new CloudConvert(CLOUDCOVERT_API);
 
 export default async (req, res) => {
   switch (req.method) {
     case "POST":
       let job;
-      console.log(req.body);
-      return;
       job = await cloudConvert.jobs
         .create({
           tasks: {
@@ -35,21 +32,20 @@ export default async (req, res) => {
           },
         })
         .then(async (thisRes) => {
-          console.log(thisRes);
-          job = await cloudConvert.jobs.wait(thisRes.tasks[0].job_id);
+          // console.log(thisRes);
+          console.log("waiting");
 
+          job = await cloudConvert.jobs.wait(thisRes.tasks[0].job_id);
+          console.log("waiting");
           const exportTask = job.tasks.filter(
             (task) =>
               task.operation === "export/url" && task.status === "finished"
           )[0];
           const file = exportTask.result.files[0];
-          res.status(Status.OK).send(file.url);
+          res.status(Status.OK).send({ pdfurl: file.url });
         });
       break;
 
-    case "GET":
-      res.send("WELCOME");
-      break;
     default:
       res.status(Status.METHOD_NOT_ALLOWED).send();
       break;
