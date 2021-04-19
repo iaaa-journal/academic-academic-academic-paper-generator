@@ -5,8 +5,8 @@
 //when storing latex code as a string
 
 let template_latex_code = `
-\\documentclass[a4paper, times, 10pt, twocolumn, twoside]{article}
-%\\documentclass[journal]{IEEEtran}
+%\\documentclass[a4paper, times, 10pt, twocolumn, twoside]{article}
+\\documentclass[journal]{IEEEtran}
 %\\usepackage{amsmath}
 \\usepackage{graphicx}
 % \\usepackage{IEEEtran}
