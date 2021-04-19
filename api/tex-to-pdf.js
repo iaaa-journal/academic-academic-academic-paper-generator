@@ -32,11 +32,7 @@ export default async (req, res) => {
           },
         })
         .then(async (thisRes) => {
-          // console.log(thisRes);
-          console.log("waiting");
-
           job = await cloudConvert.jobs.wait(thisRes.tasks[0].job_id);
-          console.log("waiting");
           const exportTask = job.tasks.filter(
             (task) =>
               task.operation === "export/url" && task.status === "finished"

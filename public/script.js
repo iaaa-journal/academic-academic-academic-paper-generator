@@ -142,9 +142,9 @@ document.getElementById("compile").addEventListener("click", function (e) {
       unescape(encodeURIComponent(modified_latex_code))
     );
 
-    console.log(modified_latex_code_base64);
-    // postTex(modified_latex_code_base64).then((data) => {
-    //   console.log(data);
-    // });
+    // console.log(modified_latex_code_base64);
+    postTex(modified_latex_code_base64).then((data) => {
+      console.log(data);
+    });
   }
 });
