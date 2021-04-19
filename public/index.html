@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+  <link rel="stylesheet" href="styles.css">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>Bullshit Paper Generator</title>
+</head>
+
+<body>
+
+  <h1>Bullshit Paper Generator 0.9</h1>
+
+  <div>
+
+    <div id="tab_input">
+      <p id="input_bars">
+        <label for="inputCoreConcept">Key term for the paper:</label>
+        <input type="text" id="inputCoreConcept" name="inputCoreConcept">
+        <br>
+        <label for="inputAuthorName">Author:</label>
+        <input type="text" id="inputAuthorName" name="inputAuthorName">
+        <br>
+        <label for="inputAffiliation">Affiliation:</label>
+        <input type="text" id="inputAffiliation" name="inputAffiliation">
+      </p>
+      <button id="compile" autofocus>Generate Paper</button>
+    </div>
+
+    <div id="tab_output">
+      <!-- loading bar -->
+      <a name="running" id="running" style="display: none">
+        Please wait… This will take a few seconds...
+        <img src="./assets/loading.gif" />
+      </a>
+    </div>
+
+    <!-- results -->
+    <div id="tab_open_pdf" style="display: none">
+      <p>Your paper is ready.</p>
+      <button id="open_pdf_btn">Open your paper as PDF</button>
+      <a name="open_pdf"></a>
+    </div>
+
+  </div>
+
+  <script src="template_latex_code.js"></script>
+
+  <script src="script.js"></script>
+</body>
+</html>
