@@ -38,6 +38,8 @@ document.getElementById("compile").addEventListener("click", function (e) {
   let inputCoreConcept_wordCount = WordCount(inputCoreConcept);
   let inputAuthorName = document.getElementById("inputAuthorName").value;
   let inputAffiliation = document.getElementById("inputAffiliation").value;
+  let inputEmail = document.getElementById("inputEmail").value;
+
 
   let inputCoreConceptNoMark = inputCoreConcept;
   let isSentence = false;
@@ -88,6 +90,7 @@ document.getElementById("compile").addEventListener("click", function (e) {
       .replace(/paper_title_text/gi, inputCoreConceptNoMark)
       .replace(/authorName/gi, inputAuthorName)
       .replace(/affiliationName/gi, inputAffiliation)
+      .replace(/emailAdress/gi, inputEmail)
       .replace(
         /abstract_para/gi,
         `${inputCoreConceptWSpace.repeat(abstract_repeat)}` +

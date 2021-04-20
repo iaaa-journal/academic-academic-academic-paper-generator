@@ -4,18 +4,36 @@
 //all the \(backslah) has to be written as \\(double backslahes)
 //when storing latex code as a string
 
+
 let template_latex_code = `
 %\\documentclass[a4paper, times, 10pt, twocolumn, twoside]{article}
 \\documentclass[journal]{IEEEtran}
+% https://www.overleaf.com/learn/latex/Questions%2FHow_do_I_add_additional_author_names_and_affiliations_to_my_paper%3F
+\\usepackage{authblk}
+% https://tex.stackexchange.com/questions/268/whats-the-best-way-to-write-e-mail-addresses
+\\usepackage{hyperref}
+% for title uppercase: https://tex.stackexchange.com/questions/335990/is-there-a-command-to-make-first-letter-upper-case
+\\usepackage{mfirstuc}
+\\usepackage{titlecaps}
+
 %\\usepackage{amsmath}
-\\usepackage{graphicx}
+%\\usepackage{graphicx}
 % \\usepackage{IEEEtran}
 
 
 \\begin{document}
 
-\\title{paper_title_text}
-\\author{authorName}
+
+% It's technically risky to use _ in latex, replace it if necessary.
+% See: https://tex.stackexchange.com/questions/52804/missing-inserted-inserted-text
+\\capitalisewords{
+  \\title{paper_title_text}
+  \\author{authorName}
+  \\affil{affiliationName}
+  \\affil{
+    \\href{mailto:emailAdress}{emailAdress}
+  }
+}
 \\date{\\today}
 
 % render title section
