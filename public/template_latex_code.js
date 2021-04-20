@@ -6,8 +6,9 @@
 
 
 let template_latex_code = `
-%\\documentclass[a4paper, times, 10pt, twocolumn, twoside]{article}
-\\documentclass[journal]{IEEEtran}
+\\documentclass[a4paper, times, 10pt, twocolumn]{article}
+\\usepackage[margin=1in]{geometry}
+%\\documentclass[journal]{IEEEtran}
 % https://www.overleaf.com/learn/latex/Questions%2FHow_do_I_add_additional_author_names_and_affiliations_to_my_paper%3F
 \\usepackage{authblk}
 % https://tex.stackexchange.com/questions/268/whats-the-best-way-to-write-e-mail-addresses
