@@ -15,7 +15,7 @@ let template_latex_code = `
 \\usepackage{hyperref}
 % for title uppercase: https://tex.stackexchange.com/questions/335990/is-there-a-command-to-make-first-letter-upper-case
 % \\usepackage{mfirstuc}
-\\usepackage{titlecaps}
+% \\usepackage{titlecaps}
 
 %\\usepackage{amsmath}
 %\\usepackage{graphicx}
