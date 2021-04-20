@@ -13,8 +13,8 @@ let template_latex_code = `
 % https://tex.stackexchange.com/questions/268/whats-the-best-way-to-write-e-mail-addresses
 \\usepackage{hyperref}
 % for title uppercase: https://tex.stackexchange.com/questions/335990/is-there-a-command-to-make-first-letter-upper-case
-\\usepackage{mfirstuc}
-\\usepackage{titlecaps}
+%\\usepackage{mfirstuc}
+%\\usepackage{titlecaps}
 
 %\\usepackage{amsmath}
 %\\usepackage{graphicx}
@@ -26,14 +26,14 @@ let template_latex_code = `
 
 % It's technically risky to use _ in latex, replace it if necessary.
 % See: https://tex.stackexchange.com/questions/52804/missing-inserted-inserted-text
-\\capitalisewords{
+%\\capitalisewords{
   \\title{paper_title_text}
   \\author{authorName}
   \\affil{affiliationName}
   \\affil{
     \\href{mailto:emailAdress}{emailAdress}
   }
-}
+%}
 \\date{\\today}
 
 % render title section
