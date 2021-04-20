@@ -4,8 +4,8 @@ const visibilityChanger = (element_id) => {
   console.log(element_id);
   return function (visible) {
     document.getElementById(element_id).style.display = visible
-      ? "block"
-      : "none";
+    ? "block"
+    : "none";
   };
 };
 
@@ -39,21 +39,37 @@ document.getElementById("compile").addEventListener("click", function (e) {
   let inputAuthorName = document.getElementById("inputAuthorName").value;
   let inputAffiliation = document.getElementById("inputAffiliation").value;
   let inputEmail = document.getElementById("inputEmail").value;
-
-
-  let inputCoreConceptNoMark = inputCoreConcept;
   let isSentence = false;
 
   // https://www.w3schools.com/jsref/jsref_endswith.asp
-  while (
-    inputCoreConceptNoMark.endsWith(".") ||
-    inputCoreConceptNoMark.endsWith(" ")
-  ) {
-    inputCoreConceptNoMark = inputCoreConceptNoMark.slice(0, -1);
-    isSentence = true;
+
+  // remove " " "," ";" at the end of input, if any
+  while(inputCoreConcept.endsWith(" ")||inputCoreConcept.endsWith(",")||inputCoreConcept.endsWith(";")){
+    inputCoreConcept = inputCoreConcept.slice(0, -1);
   }
 
-  let inputCoreConceptWSpace = inputCoreConceptNoMark + " ";
+  // always use one of the three below to compose latex, DO NOT USE inputCoreConcept DIRECTLY
+  let inputCoreConceptNoMark = inputCoreConcept;
+  let inputCoreConceptMark = inputCoreConcept;
+  let inputCoreConceptAsSentence;
+
+  if(inputCoreConcept.endsWith(".") || inputCoreConcept.endsWith("?") || inputCoreConcept.endsWith("!")){
+    inputCoreConceptAsSentence = inputCoreConcept + " ";
+    isSentence = true;
+  }else{
+    inputCoreConceptAsSentence = inputCoreConcept + ". "
+  }
+
+  while (
+    inputCoreConceptNoMark.endsWith(".") || inputCoreConceptNoMark.endsWith("?") || inputCoreConceptNoMark.endsWith("!")
+  ) {
+    inputCoreConceptNoMark = inputCoreConceptNoMark.slice(0, -1);
+  }
+
+
+  let inputCoreConceptCap = titleCase(inputCoreConceptNoMark);
+  inputAuthorName = titleCase(inputAuthorName);
+  inputAffiliation = titleCase(inputAffiliation);
   // console.log(inputCoreConceptWSpace);
 
   //https://stackoverflow.com/questions/18679576/counting-words-in-string/30335883
@@ -64,6 +80,17 @@ document.getElementById("compile").addEventListener("click", function (e) {
   //https://www.w3schools.com/js/js_random.asp
   function randomize_length(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
+  }
+
+  function titleCase(str) {
+    var splitStr = str.toLowerCase().split(' ');
+    for (var i = 0; i < splitStr.length; i++) {
+      // You do not need to check if i is larger than splitStr length, as your for does that for you
+      // Assign it back to the array
+      splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+    }
+    // Directly return the joined string
+    return splitStr.join(' ');
   }
 
   // generate paper content
@@ -87,27 +114,25 @@ document.getElementById("compile").addEventListener("click", function (e) {
     //      /placeholder/gi    syntax for replace "placeholder" global and ignore case flags
     // not sure why this line doesn't work as template_latex_code.replace("placeholder", input_phrase);
     let modified_latex_code = template_latex_code
-      .replace(/paper_title_text/gi, inputCoreConceptNoMark)
-      .replace(/authorName/gi, inputAuthorName)
-      .replace(/affiliationName/gi, inputAffiliation)
-      .replace(/emailAdress/gi, inputEmail)
-      .replace(
-        /abstract_para/gi,
-        `${inputCoreConceptWSpace.repeat(abstract_repeat)}` +
-          inputCoreConceptNoMark +
-          `.`
-      )
-      .replace(/section_title/gi, inputCoreConcept)
-      .replace(/subsubtitle_text/gi, inputCoreConcept)
-      .replace(/subtitle_text/gi, inputCoreConcept)
-      .replace(/formulaValue/gi, inputCoreConceptNoMark)
-      .replace(
-        /summary_para/gi,
-        `${inputCoreConceptWSpace.repeat(summary_repeat)}` +
-          inputCoreConceptNoMark +
-          `.`
-      )
-      .replace(/reference_text/gi, inputCoreConceptNoMark);
+    .replace(/paper_title_text/gi, inputCoreConceptCap)
+    .replace(/authorName/gi, inputAuthorName)
+    .replace(/affiliationName/gi, inputAffiliation)
+    .replace(/emailAdress/gi, inputEmail)
+    .replace(
+      /abstract_para/gi,
+      `${inputCoreConceptAsSentence.repeat(abstract_repeat)}` +
+      inputCoreConceptAsSentence
+    )
+    .replace(/section_title/gi, inputCoreConceptCap)
+    .replace(/subsubtitle_text/gi, inputCoreConceptCap)
+    .replace(/subtitle_text/gi, inputCoreConceptCap)
+    .replace(/formulaValue/gi, inputCoreConceptNoMark)
+    .replace(
+      /summary_para/gi,
+      `${inputCoreConceptAsSentence.repeat(summary_repeat)}` +
+      inputCoreConceptAsSentence
+    )
+    .replace(/reference_text/gi, inputCoreConceptCap);
     const content_array = {
       intro_content: 1,
       section1_content: 2,
@@ -128,11 +153,10 @@ document.getElementById("compile").addEventListener("click", function (e) {
         }
         let n = Math.floor(section_para_length / inputCoreConcept_wordCount);
         generated_content =
-          generated_content +
-          `${inputCoreConceptWSpace.repeat(n)}` +
-          inputCoreConceptNoMark +
-          `.` +
-          `\n\n`;
+        generated_content +
+        `${inputCoreConceptAsSentence.repeat(n)}` +
+        inputCoreConceptAsSentence +
+        `\n\n`;
       }
       // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
       let replaceThis = new RegExp(content, "gi");
