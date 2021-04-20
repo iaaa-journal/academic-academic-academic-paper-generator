@@ -43,9 +43,12 @@ document.getElementById("compile").addEventListener("click", function (e) {
 
   // https://www.w3schools.com/jsref/jsref_endswith.asp
 
-  // remove " " "," ";" at the end of input, if any
+  // remove " " "," ";" at the begin or end of input, if any
   while(inputCoreConcept.endsWith(" ")||inputCoreConcept.endsWith(",")||inputCoreConcept.endsWith(";")){
-    inputCoreConcept = inputCoreConcept.slice(0, -1);
+    inputCoreConcept = inputCoreConcept.slice(1);
+  }
+  while(inputCoreConcept.startsWith(" ")||inputCoreConcept.startsWith(",")||inputCoreConcept.startsWith(";")){
+    inputCoreConcept = inputCoreConcept.slice(1);
   }
 
   // always use one of the three below to compose latex, DO NOT USE inputCoreConcept DIRECTLY
@@ -54,10 +57,17 @@ document.getElementById("compile").addEventListener("click", function (e) {
   let inputCoreConceptAsSentence;
 
   if(inputCoreConcept.endsWith(".") || inputCoreConcept.endsWith("?") || inputCoreConcept.endsWith("!")){
-    inputCoreConceptAsSentence = inputCoreConcept + " ";
+    inputCoreConceptAsSentence = sentenceCase(inputCoreConcept) + " ";
     isSentence = true;
   }else{
-    inputCoreConceptAsSentence = inputCoreConcept + ". "
+    inputCoreConceptAsSentence = sentenceCase(inputCoreConcept) + ". "
+  }
+
+  if(inputCoreConcept.endsWith(".") || inputCoreConcept.endsWith("?") || inputCoreConcept.endsWith("!")){
+    inputCoreConceptAsSentence = sentenceCase(inputCoreConcept) + " ";
+    isSentence = true;
+  }else{
+    inputCoreConceptAsSentence = sentenceCase(inputCoreConcept) + ". "
   }
 
   while (
@@ -91,6 +101,11 @@ document.getElementById("compile").addEventListener("click", function (e) {
     }
     // Directly return the joined string
     return splitStr.join(' ');
+  }
+
+  function sentenceCase(str)
+  {
+      return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
   // generate paper content
