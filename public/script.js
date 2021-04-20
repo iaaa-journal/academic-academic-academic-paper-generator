@@ -197,13 +197,13 @@ document.getElementById("compile").addEventListener("click", function (e) {
         base64: modified_latex_code_base64,
       },
     };
-    // console.log(data);
+    console.log(data);
 
-    // postTex(data).then((data) => {
-    //   pdfurl = data.pdfurl;
-    //   showLoadingIndicator(false);
-    //   showOpenButton(true);
-    // });
+    postTex(data).then((data) => {
+      pdfurl = data.pdfurl;
+      showLoadingIndicator(false);
+      showOpenButton(true);
+    });
   }
 });
 
