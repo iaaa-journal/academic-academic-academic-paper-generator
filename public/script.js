@@ -47,9 +47,9 @@ document.getElementById("compile").addEventListener("click", function (e) {
   while(inputCoreConcept.startsWith(" ")||inputCoreConcept.startsWith(",")||inputCoreConcept.startsWith(";")){
     inputCoreConcept = inputCoreConcept.slice(1);
   }
-  
+
   while(inputCoreConcept.endsWith(" ")||inputCoreConcept.endsWith(",")||inputCoreConcept.endsWith(";")){
-    inputCoreConcept = inputCoreConcept.slice(1);
+    inputCoreConcept = inputCoreConcept.slice(0,-1);
   }
 
   console.log("done removing space");
@@ -66,7 +66,7 @@ document.getElementById("compile").addEventListener("click", function (e) {
     inputCoreConceptAsSentence = sentenceCase(inputCoreConcept) + ". "
   }
 
-  console.log("done making sentence");
+  console.log(inputCoreConceptMark, inputCoreConceptNoMark, inputCoreConceptAsSentence);
 
 
   while (
@@ -75,7 +75,7 @@ document.getElementById("compile").addEventListener("click", function (e) {
     inputCoreConceptNoMark = inputCoreConceptNoMark.slice(0, -1);
   }
 
-  console.log("done removing marks");
+  console.log(inputCoreConceptMark, inputCoreConceptNoMark, inputCoreConceptAsSentence);
 
 
 
@@ -183,6 +183,8 @@ document.getElementById("compile").addEventListener("click", function (e) {
       );
     }
 
+    console.log(modified_latex_code);
+
     const modified_latex_code_base64 = btoa(
       unescape(encodeURIComponent(modified_latex_code))
     );
@@ -195,13 +197,13 @@ document.getElementById("compile").addEventListener("click", function (e) {
         base64: modified_latex_code_base64,
       },
     };
-    console.log(data);
+    // console.log(data);
 
-    postTex(data).then((data) => {
-      pdfurl = data.pdfurl;
-      showLoadingIndicator(false);
-      showOpenButton(true);
-    });
+    // postTex(data).then((data) => {
+    //   pdfurl = data.pdfurl;
+    //   showLoadingIndicator(false);
+    //   showOpenButton(true);
+    // });
   }
 });
 
