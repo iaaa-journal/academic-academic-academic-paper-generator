@@ -44,12 +44,15 @@ document.getElementById("compile").addEventListener("click", function (e) {
   // https://www.w3schools.com/jsref/jsref_endswith.asp
 
   // remove " " "," ";" at the begin or end of input, if any
-  while(inputCoreConcept.endsWith(" ")||inputCoreConcept.endsWith(",")||inputCoreConcept.endsWith(";")){
-    inputCoreConcept = inputCoreConcept.slice(1);
-  }
   while(inputCoreConcept.startsWith(" ")||inputCoreConcept.startsWith(",")||inputCoreConcept.startsWith(";")){
     inputCoreConcept = inputCoreConcept.slice(1);
   }
+  
+  while(inputCoreConcept.endsWith(" ")||inputCoreConcept.endsWith(",")||inputCoreConcept.endsWith(";")){
+    inputCoreConcept = inputCoreConcept.slice(1);
+  }
+
+  console.log("done removing space");
 
   // always use one of the three below to compose latex, DO NOT USE inputCoreConcept DIRECTLY
   let inputCoreConceptNoMark = inputCoreConcept;
@@ -63,18 +66,17 @@ document.getElementById("compile").addEventListener("click", function (e) {
     inputCoreConceptAsSentence = sentenceCase(inputCoreConcept) + ". "
   }
 
-  if(inputCoreConcept.endsWith(".") || inputCoreConcept.endsWith("?") || inputCoreConcept.endsWith("!")){
-    inputCoreConceptAsSentence = sentenceCase(inputCoreConcept) + " ";
-    isSentence = true;
-  }else{
-    inputCoreConceptAsSentence = sentenceCase(inputCoreConcept) + ". "
-  }
+  console.log("done making sentence");
+
 
   while (
     inputCoreConceptNoMark.endsWith(".") || inputCoreConceptNoMark.endsWith("?") || inputCoreConceptNoMark.endsWith("!")
   ) {
     inputCoreConceptNoMark = inputCoreConceptNoMark.slice(0, -1);
   }
+
+  console.log("done removing marks");
+
 
 
   let inputCoreConceptCap = titleCase(inputCoreConceptNoMark);
