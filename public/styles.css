@@ -1,9 +1,19 @@
 body{
-  width:400px;
-  margin:auto;
-    text-align: center;
+  width:600px;
+  height:400px;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  text-align: center;
 }
 
-#input_bars{
-  text-align: left;
-}
+
+label {
+ padding:6px;
+  display: inline-block;
+  width: 140px;
+  text-align: right;
+  }​
