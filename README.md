@@ -1,4 +1,4 @@
-# Bullshit Paper?
+# Academic Academic Academic Paper Generator 1.0
 
 ## Description
 This is an Academic Paper Generator. A project inspired by [Chicken Chicken Chicken](https://www.wired.com/images_blogs/wiredscience/files/chicken.pdf) and [Get me off Your Fucking Mailing List](https://www.wired.com/images_blogs/wiredscience/files/chicken.pdf).
