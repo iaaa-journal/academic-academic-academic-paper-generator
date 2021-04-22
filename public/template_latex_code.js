@@ -77,15 +77,18 @@ summary_para
 
 \\begin{thebibliography}{9}
 \\bibitem{latexcompanion}
-reference_text, reference_text, and reference_text.
-\\textit{reference_text reference_text reference_text}.
-reference_text-reference_text, reference_text, reference_text, 1993.
+Zongker, Doug. (2002). “Chicken Chicken Chicken: Chicken Chicken.”
 
-\\bibitem{einstein}
-reference_text.
-\\textit{reference_text reference_text reference_text reference_text}.
-[\\textit{reference_text reference_text reference_text}].
-reference_text, 322(10):891–921, 1905.
+\\bibitem{latexcompanion}
+Zongker, Doug. (2007, February 16). 
+\\textit{Chicken Chicken Chicken}.
+[Humor Session]. American Association for the Advancement of Science, San Francisco, LA. https://www.youtube.com/watch?v=yL_-1d9OSdk
+\\end{thebibliography}
+
+\\bibitem{latexcompanion}
+Mazières, David and Kohler, Eddie. (2005). “Get me off Your Fucking Mailing List.”
+\\textit{International Journal of Advanced Computer Technology,}.
+\\\\texttt{https://doi.org/10.18535/ijact}
 \\end{thebibliography}
 
 \\end{document}`;
