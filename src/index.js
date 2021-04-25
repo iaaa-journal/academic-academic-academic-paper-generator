@@ -9,6 +9,12 @@ const port = process.env.PORT || 8080;
 
 const filepath = path.join(__dirname, "public/documents");
 
+function convertToSlug(Text) {
+  return Text.toLowerCase()
+    .replace(/ /g, "-")
+    .replace(/[^\w-]+/g, "");
+}
+
 app.use("/", express.static(path.join(__dirname, "public")));
 
 app.post("/api/tex-to-pdf", (req, res) => {
@@ -23,7 +29,9 @@ app.post("/api/tex-to-pdf", (req, res) => {
   // let plaintext = buff.toString("ascii");
   // console.log(plaintext);
 
-  const filename = `/${coreConcept}-by-${authorName}-from-${affiliation}`;
+  const filename = `/${convertToSlug(coreConcept)}-by-${convertToSlug(
+    authorName
+  )}-from-${convertToSlug(affiliation)}`;
   console.log(filepath, filename);
 
   fs.writeFile(filepath + filename + ".tex", base64, "base64", (e) => {
