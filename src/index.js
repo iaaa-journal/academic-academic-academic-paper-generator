@@ -48,12 +48,13 @@ app.post("/api/tex-to-pdf", (req, res) => {
 });
 
 app.get("/api/all-pdfs", (req, res) => {
-  let fileList = [];
+  let fileList = ``;
   fs.readdir(filepath, (err, files) => {
     files.forEach((file) => {
-      fileList.push(file);
+      if (file.endsWith(".pdf"))
+        fileList += `<a href=${"/documents/" + file}>${file}</a><br>`;
     });
-    res.status(200).send({ files: fileList });
+    res.status(200).send(fileList);
   });
 });
 
