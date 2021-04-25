@@ -1,16 +1,8 @@
 let pdfurl = "";
 
-const visibilityChanger = (element_id) => {
-  console.log(element_id);
-  return function (visible) {
-    document.getElementById(element_id).style.display = visible
-    ? "block"
-    : "none";
-  };
+const changeVisibility = (selector, isVisible) => {
+  document.querySelector(selector).style.display = isVisible ? "block" : "none";
 };
-
-const showLoadingIndicator = visibilityChanger("running");
-const showOpenButton = visibilityChanger("tab_open_pdf");
 
 const postTex = async (data) => {
   const url = "/api/tex-to-pdf";
@@ -31,114 +23,113 @@ const postTex = async (data) => {
   return response.json(); // parses JSON response into native JavaScript objects
 };
 
-document.getElementById("compile").addEventListener("click", function (e) {
-  // get inputs
-  let inputCoreConcept = document.getElementById("inputCoreConcept").value;
-  let inputAuthorName = document.getElementById("inputAuthorName").value;
-  let inputAffiliation = document.getElementById("inputAffiliation").value;
-  let inputEmail = document.getElementById("inputEmail").value;
-  let isSentence = false;
+const generateLatexFromTemplate = (
+  inputCoreConcept,
+  inputAuthorName,
+  inputAffiliation,
+  inputEmail,
+  templateLatexCode
+) => {
+  if (!inputCoreConcept || !inputAuthorName || !inputAffiliation || !inputEmail)
+    return null;
 
-  if(!inputCoreConcept||!inputAuthorName||!inputAffiliation||!inputEmail){
-    document.getElementById("notice").style.display = "block";
-    console.log("no");
+  // https://www.w3schools.com/jsref/jsref_endswith.asp
+  // remove " " "," ";" at the begin or end of input, if any
+  while (
+    inputCoreConcept.startsWith(" ") ||
+    inputCoreConcept.startsWith(",") ||
+    inputCoreConcept.startsWith(";")
+  ) {
+    inputCoreConcept = inputCoreConcept.slice(1);
+  }
 
-  }else{
-    console.log("yes");
-    showLoadingIndicator(true);
-    document.getElementById("notice").style.display = "none";
+  while (
+    inputCoreConcept.endsWith(" ") ||
+    inputCoreConcept.endsWith(",") ||
+    inputCoreConcept.endsWith(";")
+  ) {
+    inputCoreConcept = inputCoreConcept.slice(0, -1);
+  }
 
-    // https://www.w3schools.com/jsref/jsref_endswith.asp
+  console.log("done removing space");
 
-    // remove " " "," ";" at the begin or end of input, if any
-    while(inputCoreConcept.startsWith(" ")||inputCoreConcept.startsWith(",")||inputCoreConcept.startsWith(";")){
-      inputCoreConcept = inputCoreConcept.slice(1);
+  let inputCoreConcept_wordCount = wordCount(inputCoreConcept);
+  // always use one of the three below to compose latex, DO NOT USE inputCoreConcept DIRECTLY
+  let inputCoreConceptNoMark = inputCoreConcept;
+  let inputCoreConceptMark = inputCoreConcept;
+  let inputCoreConceptAsSentence;
+
+  if (
+    inputCoreConcept.endsWith(".") ||
+    inputCoreConcept.endsWith("?") ||
+    inputCoreConcept.endsWith("!")
+  ) {
+    inputCoreConceptAsSentence = sentenceCase(inputCoreConcept) + " ";
+    isSentence = true;
+  } else {
+    inputCoreConceptAsSentence = sentenceCase(inputCoreConcept) + ". ";
+  }
+
+  while (
+    inputCoreConceptNoMark.endsWith(".") ||
+    inputCoreConceptNoMark.endsWith("?") ||
+    inputCoreConceptNoMark.endsWith("!")
+  ) {
+    inputCoreConceptNoMark = inputCoreConceptNoMark.slice(0, -1);
+  }
+
+  let inputCoreConceptCap = titleCase(inputCoreConceptNoMark);
+  inputAuthorName = titleCase(inputAuthorName);
+  inputAffiliation = titleCase(inputAffiliation);
+
+  //https://stackoverflow.com/questions/18679576/counting-words-in-string/30335883
+  function wordCount(str) {
+    return str.split(" ").length;
+  }
+
+  //https://www.w3schools.com/js/js_random.asp
+  function randomize_length(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+
+  function titleCase(str) {
+    var splitStr = str.toLowerCase().split(" ");
+    for (var i = 0; i < splitStr.length; i++) {
+      // You do not need to check if i is larger than splitStr length, as your for does that for you
+      // Assign it back to the array
+      splitStr[i] =
+        splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
     }
+    // Directly return the joined string
+    return splitStr.join(" ");
+  }
 
-    while(inputCoreConcept.endsWith(" ")||inputCoreConcept.endsWith(",")||inputCoreConcept.endsWith(";")){
-      inputCoreConcept = inputCoreConcept.slice(0,-1);
-    }
+  function sentenceCase(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 
-    console.log("done removing space");
+  // generate paper content
+  let modified_latex_code = templateLatexCode;
+  if (inputCoreConcept.length > 0) {
+    let abstract_para_length = randomize_length(120, 160);
+    let intro_para_length = randomize_length(100, 150);
+    let summary_para_length = randomize_length(120, 160);
 
-    let inputCoreConcept_wordCount = WordCount(inputCoreConcept);
-    // always use one of the three below to compose latex, DO NOT USE inputCoreConcept DIRECTLY
-    let inputCoreConceptNoMark = inputCoreConcept;
-    let inputCoreConceptMark = inputCoreConcept;
-    let inputCoreConceptAsSentence;
+    let abstract_repeat;
+    let intro_repeat;
+    let summary_repeat;
 
-    if(inputCoreConcept.endsWith(".") || inputCoreConcept.endsWith("?") || inputCoreConcept.endsWith("!")){
-      inputCoreConceptAsSentence = sentenceCase(inputCoreConcept) + " ";
-      isSentence = true;
-    }else{
-      inputCoreConceptAsSentence = sentenceCase(inputCoreConcept) + ". "
-    }
+    abstract_repeat = Math.floor(
+      abstract_para_length / inputCoreConcept_wordCount
+    );
+    intro_repeat = Math.floor(intro_para_length / inputCoreConcept_wordCount);
+    summary_repeat = Math.floor(
+      summary_para_length / inputCoreConcept_wordCount
+    );
 
-    console.log(inputCoreConceptMark, inputCoreConceptNoMark, inputCoreConceptAsSentence);
-
-
-    while (
-      inputCoreConceptNoMark.endsWith(".") || inputCoreConceptNoMark.endsWith("?") || inputCoreConceptNoMark.endsWith("!")
-    ) {
-      inputCoreConceptNoMark = inputCoreConceptNoMark.slice(0, -1);
-    }
-
-    console.log(inputCoreConceptMark, inputCoreConceptNoMark, inputCoreConceptAsSentence);
-
-
-
-    let inputCoreConceptCap = titleCase(inputCoreConceptNoMark);
-    inputAuthorName = titleCase(inputAuthorName);
-    inputAffiliation = titleCase(inputAffiliation);
-    // console.log(inputCoreConceptWSpace);
-
-    //https://stackoverflow.com/questions/18679576/counting-words-in-string/30335883
-    function WordCount(str) {
-      return str.split(" ").length;
-    }
-
-    //https://www.w3schools.com/js/js_random.asp
-    function randomize_length(min, max) {
-      return Math.floor(Math.random() * (max - min)) + min;
-    }
-
-    function titleCase(str) {
-      var splitStr = str.toLowerCase().split(' ');
-      for (var i = 0; i < splitStr.length; i++) {
-        // You do not need to check if i is larger than splitStr length, as your for does that for you
-        // Assign it back to the array
-        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
-      }
-      // Directly return the joined string
-      return splitStr.join(' ');
-    }
-
-    function sentenceCase(str)
-    {
-      return str.charAt(0).toUpperCase() + str.slice(1);
-    }
-
-    // generate paper content
-    if (inputCoreConcept.length > 0) {
-      let abstract_para_length = randomize_length(120, 160);
-      let intro_para_length = randomize_length(100, 150);
-      let summary_para_length = randomize_length(120, 160);
-
-      let abstract_repeat;
-      let intro_repeat;
-      let summary_repeat;
-
-      abstract_repeat = Math.floor(
-        abstract_para_length / inputCoreConcept_wordCount
-      );
-      intro_repeat = Math.floor(intro_para_length / inputCoreConcept_wordCount);
-      summary_repeat = Math.floor(
-        summary_para_length / inputCoreConcept_wordCount
-      );
-
-      //      /placeholder/gi    syntax for replace "placeholder" global and ignore case flags
-      // not sure why this line doesn't work as template_latex_code.replace("placeholder", input_phrase);
-      let modified_latex_code = template_latex_code
+    //      /placeholder/gi    syntax for replace "placeholder" global and ignore case flags
+    // not sure why this line doesn't work as template_latex_code.replace("placeholder", input_phrase);
+    modified_latex_code = template_latex_code
       .replace(/paper_title_text/gi, inputCoreConceptCap)
       .replace(/authorName/gi, inputAuthorName)
       .replace(/affiliationName/gi, inputAffiliation)
@@ -146,7 +137,7 @@ document.getElementById("compile").addEventListener("click", function (e) {
       .replace(
         /abstract_para/gi,
         `${inputCoreConceptAsSentence.repeat(abstract_repeat)}` +
-        inputCoreConceptAsSentence
+          inputCoreConceptAsSentence
       )
       .replace(/section_title/gi, inputCoreConceptCap)
       .replace(/subsubtitle_text/gi, inputCoreConceptCap)
@@ -155,69 +146,90 @@ document.getElementById("compile").addEventListener("click", function (e) {
       .replace(
         /summary_para/gi,
         `${inputCoreConceptAsSentence.repeat(summary_repeat)}` +
-        inputCoreConceptAsSentence
+          inputCoreConceptAsSentence
       )
       .replace(/reference_text/gi, inputCoreConceptCap);
-      const content_array = {
-        intro_content: 1,
-        section1_content: 2,
-        section2_content: 3,
-        section3_content: 4,
-        subsubsection_content: 5,
-        subsection_content: 6,
-      };
-      for (let content in content_array) {
-        let paras = randomize_length(1, 4);
-        let generated_content = "";
-        for (let i = 0; i < paras; i++) {
-          let section_para_length;
-          if (i == 0 || i == paras - 1) {
-            section_para_length = randomize_length(80, 150);
-          } else {
-            section_para_length = randomize_length(150, 300);
-          }
-          let n = Math.floor(section_para_length / inputCoreConcept_wordCount);
-          generated_content =
+    const content_array = {
+      intro_content: 1,
+      section1_content: 2,
+      section2_content: 3,
+      section3_content: 4,
+      subsubsection_content: 5,
+      subsection_content: 6,
+    };
+    for (let content in content_array) {
+      let paras = randomize_length(1, 4);
+      let generated_content = "";
+      for (let i = 0; i < paras; i++) {
+        let section_para_length;
+        if (i == 0 || i == paras - 1) {
+          section_para_length = randomize_length(80, 150);
+        } else {
+          section_para_length = randomize_length(150, 300);
+        }
+        let n = Math.floor(section_para_length / inputCoreConcept_wordCount);
+        generated_content =
           generated_content +
           `${inputCoreConceptAsSentence.repeat(n)}` +
           inputCoreConceptAsSentence +
           `\n\n`;
-        }
-        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
-        let replaceThis = new RegExp(content, "gi");
-        modified_latex_code = modified_latex_code.replace(
-          replaceThis,
-          generated_content
-        );
       }
-
-      console.log(modified_latex_code);
-
-      const modified_latex_code_base64 = btoa(
-        unescape(encodeURIComponent(modified_latex_code))
+      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+      let replaceThis = new RegExp(content, "gi");
+      modified_latex_code = modified_latex_code.replace(
+        replaceThis,
+        generated_content
       );
-
-      let data = {
-        coreConcept: inputCoreConcept,
-        authorName: inputAuthorName,
-        affiliation: inputAffiliation,
-        texCode: {
-          base64: modified_latex_code_base64,
-        },
-      };
-      console.log(data);
-
-      postTex(data).then((data) => {
-        pdfurl = data.pdfurl;
-        showLoadingIndicator(false);
-        showOpenButton(true);
-      });
     }
+  }
+  return modified_latex_code;
+};
+
+document.querySelector("#compile").addEventListener("click", (event) => {
+  event.preventDefault();
+  let inputCoreConcept = document.querySelector("#inputCoreConcept").value;
+  let inputAuthorName = document.querySelector("#inputAuthorName").value;
+  let inputAffiliation = document.querySelector("#inputAffiliation").value;
+  let inputEmail = document.querySelector("#inputEmail").value;
+
+  let generatedLatex = generateLatexFromTemplate(
+    inputCoreConcept,
+    inputAuthorName,
+    inputAffiliation,
+    inputEmail,
+    template_latex_code
+  );
+
+  if (!generatedLatex) {
+    changeVisibility("#validation-warning", true);
+  } else {
+    changeVisibility("#validation-warning", false);
+    changeVisibility("#loading-indicator", true);
+
+    const generatedLatex_base64 = btoa(
+      unescape(encodeURIComponent(generatedLatex))
+    );
+
+    let data = {
+      coreConcept: inputCoreConcept,
+      authorName: inputAuthorName,
+      affiliation: inputAffiliation,
+      texCode: {
+        base64: generatedLatex_base64,
+      },
+    };
+
+    postTex(data).then((data) => {
+      pdfurl = data.pdfurl;
+      changeVisibility("#loading-indicator", false);
+      changeVisibility("#pdf-output", true);
+    });
   }
 });
 
-document.getElementById("open_pdf_btn").addEventListener("click", (e) => {
-  showOpenButton(false);
+document.querySelector("#pdf-button").addEventListener("click", (e) => {
+  changeVisibility("#pdf-output", false);
+
   console.log("new pdf at " + pdfurl);
   window.open(pdfurl);
 });
