@@ -24,6 +24,21 @@ body {
   text-align: center;
 }
 
+#form{
+  width:400px;
+  padding: 0;
+  margin: auto;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 label {
   padding:6px;
   display: inline-block;

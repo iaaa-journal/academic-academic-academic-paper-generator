@@ -204,6 +204,7 @@ document.querySelector("#compile").addEventListener("click", (event) => {
   if (!generatedLatex) {
     changeVisibility("#validation-warning", true);
   } else {
+    changeVisibility("#pdf-output", false);
     changeVisibility("#validation-warning", false);
     changeVisibility("#loading-indicator", true);
 
