@@ -59,33 +59,24 @@ subsection_content
 \\subsubsection{subsubtitle_text}
 subsubsection_content
 
-% The following shows typesetting power of LaTeX:
-% \\begin{align}
-% E_0 &= formulaValue^2                              \\
-% E &= \\frac{formulaValue^2}{\sqrt{1-\\frac{formulaValue^2}{formulaValue^2}}}
-% \\end{align}
-
-
 \\section{section_title}
 section3_content
 
 \\section*{Summary}
 summary_para
 
-\\begin{thebibliography}{9}
+\\begin{thebibliography}{3}
 \\bibitem{latexcompanion}
 Zongker, Doug. (2002). \\enquote{Chicken Chicken Chicken: Chicken Chicken.}
 
 \\bibitem{latexcompanion}
 Zongker, Doug. (2007, February 16). 
 \\textit{Chicken Chicken Chicken}.
-[Humor Session]. American Association for the Advancement of Science, San Francisco, LA. https://www.youtube.com/watch?v=yL_-1d9OSdk
-\\end{thebibliography}
+[Humor Session]. American Association for the Advancement of Science, San Francisco, LA.
 
 \\bibitem{latexcompanion}
 Mazières, David and Kohler, Eddie. (2005). \\enquote{Get me off Your Fucking Mailing List.}
-\\textit{International Journal of Advanced Computer Technology,}.
-\\\\texttt{https://doi.org/10.18535/ijact}
+\\textit{International Journal of Advanced Computer Technology.}
 \\end{thebibliography}
 
 \\end{document}`;

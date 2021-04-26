@@ -93,7 +93,7 @@ const generateLatexFromTemplate = (
   }
 
   function titleCase(str) {
-    var splitStr = str.toLowerCase().split(" ");
+    var splitStr = str.split(" ");
     for (var i = 0; i < splitStr.length; i++) {
       // You do not need to check if i is larger than splitStr length, as your for does that for you
       // Assign it back to the array
@@ -182,6 +182,7 @@ const generateLatexFromTemplate = (
       );
     }
   }
+  console.log(modified_latex_code);
   return modified_latex_code;
 };
 
