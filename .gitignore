@@ -16,3 +16,4 @@ package-lock.json
 *.pdf
 *.tex
 *.log
+*.zip

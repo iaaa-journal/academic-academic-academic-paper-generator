@@ -18,24 +18,18 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: row;
+  text-align: center;
+
 }
 
 .row {
   width: auto;
+  position:relative;
 
 }
 
 .scrollable{
-  margin: 10px;
-  text-align: center;
   overflow: auto; 
   overflow-y:scroll; 
   height:600px;
-}
-
-label {
-  padding:6px;
-  display: inline-block;
-  width: 140px;
-  text-align: right;
 }

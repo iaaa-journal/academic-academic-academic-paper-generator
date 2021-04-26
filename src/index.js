@@ -1,7 +1,8 @@
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
-var shell = require("shelljs");
+const shell = require("shelljs");
+const archiver = require("archiver");
 
 const app = express();
 app.use(express.json());
@@ -11,6 +12,19 @@ const filepath = path.join(__dirname, "public/documents");
 
 function convertToSlug(Text) {
   return Text.replace(/ /g, "-").replace(/[^\w-]+/g, "");
+}
+
+function archiveDirToZip(dir, zipPath, callback) {
+  let output = fs.createWriteStream(zipPath);
+  let archive = archiver("zip", { zlib: { level: 9 } });
+
+  output.on("close", () => {
+    callback();
+  });
+
+  archive.pipe(output);
+  archive.directory(dir, "");
+  archive.finalize();
 }
 
 app.use("/", express.static(path.join(__dirname, "public")));
@@ -39,13 +53,13 @@ app.post("/api/tex-to-pdf", (req, res) => {
         filepath + filename + ".tex"
       } `,
       (code, output) => {
+        // if pdflatex failed
         if (code != 0) {
           res
             .status(500)
             .send({ pdfurl: "/documents/" + filename + ".log", failed: true });
 
-          console.log(output);
-          // clean up temporary files
+          // clean up temporary files but keep the log
           [".tex", ".pdf", ".aux", ".out"].forEach((extension) => {
             console.log(filepath + filename + extension);
             let removedFilename = filepath + filename + extension;
@@ -55,7 +69,10 @@ app.post("/api/tex-to-pdf", (req, res) => {
               console.log(err);
             }
           });
-        } else {
+        }
+
+        // if pdflatex succeeded
+        else {
           res.status(200).send({
             pdfurl: "/documents/" + filename + ".pdf",
           });
@@ -71,6 +88,8 @@ app.post("/api/tex-to-pdf", (req, res) => {
             }
           });
         }
+
+        archiveDirToZip(filepath, filepath + "/iaaa-archive.zip", () => {});
       }
     );
   });
@@ -81,11 +100,12 @@ app.get("/api/all-files", (req, res) => {
   fs.readdir(filepath, (err, files) => {
     files.forEach((file) => {
       const { ext, name } = path.parse(file);
-      if (ext === ".pdf" || ext === ".tex") {
+      if (ext === ".pdf" || ext === ".tex" || ext === ".zip") {
         if (!fileList[name]) fileList[name] = {};
         fileList[name][ext.slice(1)] = `${"/documents/" + file}`;
       }
     });
+
     res.status(200).send(fileList);
   });
 });
