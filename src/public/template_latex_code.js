@@ -4,7 +4,6 @@
 //all the \(backslah) has to be written as \\(double backslahes)
 //when storing latex code as a string
 
-
 let template_latex_code = `
 \\documentclass[a4paper, times, 10pt, twocolumn]{article}
 \\usepackage[margin=1in]{geometry}
@@ -17,6 +16,8 @@ let template_latex_code = `
 % \\usepackage{mfirstuc}
 % \\usepackage{titlecaps}
 \\usepackage{csquotes}
+\\usepackage{hyperref}
+\\usepackage{textcomp}
 
 
 \\begin{document}
@@ -68,15 +69,21 @@ summary_para
 \\begin{thebibliography}{3}
 \\bibitem{latexcompanion}
 Zongker, Doug. (2002). \\enquote{Chicken Chicken Chicken: Chicken Chicken.}
+\\href{https://isotropic.org/papers/chicken.pdf}{\\textit{https://isotropic.org/papers/chicken.pdf}}
 
 \\bibitem{latexcompanion}
 Zongker, Doug. (2007, February 16). 
 \\textit{Chicken Chicken Chicken}.
 [Humor Session]. American Association for the Advancement of Science, San Francisco, LA.
+\\href{https://www.youtube.com/watch?v=yL_-1d9OSdk}{\\textit{https://www.youtube.com/watch?v=yL\\_-1d9OSdk}}
 
 \\bibitem{latexcompanion}
 Mazières, David and Kohler, Eddie. (2005). \\enquote{Get me off Your Fucking Mailing List.}
 \\textit{International Journal of Advanced Computer Technology.}
+\\href{https://www.scs.stanford.edu/~dm/home/papers/remove.pdf}{\\textit{https://www.scs.stanford.edu/\\raisebox{0.5ex}{\\texttildelow}dm /home/papers/remove.pdf}}
+
+
+
 \\end{thebibliography}
 
 \\end{document}`;
