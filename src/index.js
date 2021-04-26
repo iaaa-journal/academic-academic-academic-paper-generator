@@ -76,12 +76,15 @@ app.post("/api/tex-to-pdf", (req, res) => {
   });
 });
 
-app.get("/api/all-pdfs", (req, res) => {
-  let fileList = ``;
+app.get("/api/all-files", (req, res) => {
+  let fileList = {};
   fs.readdir(filepath, (err, files) => {
     files.forEach((file) => {
-      if (file.endsWith(".pdf"))
-        fileList += `<a href=${"/documents/" + file}>${file}</a><br>`;
+      const { ext, name } = path.parse(file);
+      if (ext === ".pdf" || ext === ".tex") {
+        if (!fileList[name]) fileList[name] = {};
+        fileList[name][ext.slice(1)] = `${"/documents/" + file}`;
+      }
     });
     res.status(200).send(fileList);
   });
