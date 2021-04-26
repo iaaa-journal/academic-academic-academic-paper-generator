@@ -10,9 +10,7 @@ const port = process.env.PORT || 8080;
 const filepath = path.join(__dirname, "public/documents");
 
 function convertToSlug(Text) {
-  return Text.toLowerCase()
-    .replace(/ /g, "-")
-    .replace(/[^\w-]+/g, "");
+  return Text.replace(/ /g, "-").replace(/[^\w-]+/g, "");
 }
 
 app.use("/", express.static(path.join(__dirname, "public")));
