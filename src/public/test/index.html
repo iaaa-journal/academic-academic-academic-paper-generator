@@ -10,25 +10,12 @@
 
   <div class='flex-container'>
     <div class='row'>
-      <h2 class="flex-item">Academic Academic Academic Paper Generator 1.0</h2>
+      <h2 class="flex-item">Test TeX Rendering Engine</h2>
 
-      <form name='paperInfoForm'>
-        <label for="inputCoreConcept">Your Core Concept:</label>
-        <input type="text" id="inputCoreConcept" name="inputCoreConcept">
-        <br>
-        <label for="inputAuthorName">Your Name:</label>
-          <input type="text" id="inputAuthorName" name="inputAuthorName">
-          <br>
-        <label for="inputAffiliation">Your Affiliation:</label>
-        <input type="text" id="inputAffiliation" name="inputAffiliation">
-        <br>
-        <label for="inputEmail">Your Email:</label>
-        <input type="email" id="inputEmail" name="inputEmail">
-        <br>
-        <p id="validation-warning" style = "display:none">Please input all the info above.</p>
+      <form name='paperInfoForm'">
+        <textarea name="comment" rows="50" cols="50" form="usrform" id='inputTexCode'></textarea>
         <br>
         <input id="compile" autofocus type="submit" value="Generate Paper">
-  
       </form>
   
       <div id="output">
@@ -36,7 +23,7 @@
         <div id='loading-indicator' style="display: none">
           <a>
             This will take a few seconds...
-            <img src="./assets/loading.gif" />
+            <img src="../assets/loading.gif" />
           </a>
         </div>
   
@@ -44,6 +31,11 @@
         <div id="pdf-output" style="display: none">
           <p>Your paper is ready.</p>
           <button id="pdf-button">Download your paper as PDF</button>
+        </div>
+
+        <div id="log-output" style="display: none; color:red">
+          <p>Your error log is ready.</p>
+          <button id="log-button">Check your error log</button>
         </div>
        
       </div>

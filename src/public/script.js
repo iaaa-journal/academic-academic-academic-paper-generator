@@ -229,7 +229,10 @@ document.querySelector("#compile").addEventListener("click", (event) => {
 
 document.querySelector("#pdf-button").addEventListener("click", (e) => {
   changeVisibility("#pdf-output", false);
-
+  document.querySelector("#inputCoreConcept").value = "";
+  document.querySelector("#inputAuthorName").value = "";
+  document.querySelector("#inputAffiliation").value = "";
+  document.querySelector("#inputEmail").value = "";
   console.log("new pdf at " + pdfurl);
   window.open(pdfurl);
 });

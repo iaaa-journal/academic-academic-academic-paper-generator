@@ -23,31 +23,54 @@ app.post("/api/tex-to-pdf", (req, res) => {
     texCode: { base64 },
   } = req.body;
 
-  // let buff = Buffer.from(base64, "base64");
-  // let plaintext = buff.toString("ascii");
-  // console.log(plaintext);
+  let filename;
 
-  const filename = `/${convertToSlug(coreConcept)}-by-${convertToSlug(
-    authorName
-  )}-from-${convertToSlug(affiliation)}`;
+  if (!coreConcept) filename = "/test";
+  else
+    filename = `/${convertToSlug(coreConcept)}-by-${convertToSlug(
+      authorName
+    )}-from-${convertToSlug(affiliation)}`;
+
   console.log(filepath, filename);
 
   fs.writeFile(filepath + filename + ".tex", base64, "base64", (e) => {
     shell.exec(
-      `pdflatex -output-format=pdf -output-directory=${filepath} ${
+      `pdflatex -output-format=pdf -halt-on-error -output-directory=${filepath} ${
         filepath + filename + ".tex"
       } `,
-      () => {
-        res.status(200).send({
-          pdfurl: "documents/" + filename + ".pdf",
-        });
+      (code, output) => {
+        if (code != 0) {
+          res
+            .status(500)
+            .send({ pdfurl: "/documents/" + filename + ".log", failed: true });
 
-        // clean up temporary files
-        [".log", ".aux", ".out"].forEach((extension) => {
-          console.log(filepath + filename + extension);
-          let removedFilename = filepath + filename + extension;
-          fs.unlinkSync(removedFilename);
-        });
+          console.log(output);
+          // clean up temporary files
+          [".tex", ".pdf", ".aux", ".out"].forEach((extension) => {
+            console.log(filepath + filename + extension);
+            let removedFilename = filepath + filename + extension;
+            try {
+              fs.unlinkSync(removedFilename);
+            } catch (err) {
+              console.log(err);
+            }
+          });
+        } else {
+          res.status(200).send({
+            pdfurl: "/documents/" + filename + ".pdf",
+          });
+
+          // clean up temporary files
+          [".log", ".aux", ".out"].forEach((extension) => {
+            console.log(filepath + filename + extension);
+            let removedFilename = filepath + filename + extension;
+            try {
+              fs.unlinkSync(removedFilename);
+            } catch (err) {
+              console.log(err);
+            }
+          });
+        }
       }
     );
   });
