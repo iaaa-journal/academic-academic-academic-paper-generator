@@ -14,16 +14,16 @@ function convertToSlug(Text) {
   return Text.replace(/ /g, "-").replace(/[^\w-]+/g, "");
 }
 
-function archiveDirToZip(dir, zipPath, callback) {
+function archiveExtInDirToZip(dir, zipPath, extensions) {
   let output = fs.createWriteStream(zipPath);
   let archive = archiver("zip", { zlib: { level: 9 } });
 
-  output.on("close", () => {
-    callback();
-  });
-
   archive.pipe(output);
-  archive.directory(dir, "");
+  extensions.forEach((ext) => {
+    archive.glob(`*${ext}`, { cwd: dir });
+  });
+  archive.glob("*.pdf", { cwd: dir });
+  archive.glob("*.tex", { cwd: dir });
   archive.finalize();
 }
 
@@ -89,7 +89,10 @@ app.post("/api/tex-to-pdf", (req, res) => {
           });
         }
 
-        archiveDirToZip(filepath, filepath + "/iaaa-archive.zip", () => {});
+        archiveExtInDirToZip(filepath, filepath + "/iaaa-archive.zip", [
+          ".tex",
+          ".pdf",
+        ]);
       }
     );
   });
