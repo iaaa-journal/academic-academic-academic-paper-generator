@@ -50,12 +50,16 @@ textarea{
   width:11em;
   height:3em;
   resize: none;
-  padding: 1px 2px;
+  padding: 1px x2px;
   margin:0em;
+  font-family: 'Times New Roman', Times, serif;
+
+
 }
 
 input{
   width: 11em;
   padding: 1px 2px;
   margin:0em;
+  font-family: 'Times New Roman', Times, serif;
 }
