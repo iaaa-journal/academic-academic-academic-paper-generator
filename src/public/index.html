@@ -13,20 +13,28 @@
       <h2 class="flex-item">Academic Academic Academic Paper Generator 1.0</h2>
 
       <form name='paperInfoForm' id="form">
+        
         <div style="display: flex; margin:0.3em 0">
           <label for="inputCoreConcept" style="padding-top: 1em;">Your Core Concept:</label>
           <textarea type="text" style="width:148px;height:3em;resize: none;padding: 1px 2px;" id="inputCoreConcept" name="inputCoreConcept"></textarea>
         </div>
-          <label for="inputAuthorName">Your Name:</label>
-          <input type="text" id="inputAuthorName" name="inputAuthorName">
+
+        <label for="inputAuthorName">Your Name:</label>
+        <input type="text" id="inputAuthorName" name="inputAuthorName">
+
         <label for="inputAffiliation">Your Affiliation:</label>
         <input type="text" id="inputAffiliation" name="inputAffiliation">
-        <br>
+
         <label for="inputEmail">Your Email:</label>
         <input type="email" id="inputEmail" name="inputEmail">
-        <span id="validation-warning" style = "width: 100%; display:none;margin-top: 0.5em;">Please input all the info above.</span>
-        <input style="margin-top: 1em;" id="compile" autofocus type="submit" value="Generate Paper">
-  
+
+        <span id="validation-warning" style = "width: 100%; display:none;margin-top: 0.5em;">
+          Please input all the info above.
+        </span>
+
+        <div style = "width: 100%;">
+          <input style="margin-top: 1em; " id="compile" autofocus type="submit" value="Generate Paper">
+        </div>
       </form>
   
       <div id="output">
