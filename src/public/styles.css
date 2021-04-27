@@ -52,7 +52,7 @@ textarea{
   resize: none;
   padding: 1px x2px;
   margin:0em;
-  font-family: 'Times New Roman', Times, serif;
+  font-family: Arial, Helvetica, sans-serif;
 
 
 }
@@ -61,5 +61,9 @@ input{
   width: 11em;
   padding: 1px 2px;
   margin:0em;
-  font-family: 'Times New Roman', Times, serif;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button{
+  font-family: Arial, Helvetica, sans-serif;
 }
