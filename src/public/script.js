@@ -1,4 +1,4 @@
-let pdfurl = "";
+let outputUrl = "";
 
 const changeVisibility = (selector, isVisible) => {
   document.querySelector(selector).style.display = isVisible ? "block" : "none";
@@ -222,7 +222,7 @@ document.querySelector("#compile").addEventListener("click", (event) => {
     };
 
     postTex(data).then((data) => {
-      pdfurl = data.pdfurl;
+      outputUrl = data.outputUrl;
       changeVisibility("#loading-indicator", false);
       changeVisibility("#pdf-output", true);
     });
@@ -235,6 +235,6 @@ document.querySelector("#pdf-button").addEventListener("click", (e) => {
   document.querySelector("#inputAuthorName").value = "";
   document.querySelector("#inputAffiliation").value = "";
   document.querySelector("#inputEmail").value = "";
-  console.log("new pdf at " + pdfurl);
-  window.open(pdfurl);
+  console.log("new output at " + outputUrl);
+  window.open(outputUrl);
 });

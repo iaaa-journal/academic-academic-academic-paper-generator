@@ -1,4 +1,4 @@
-let pdfurl = "";
+let outputUrl = "";
 
 const changeVisibility = (selector, isVisible) => {
   document.querySelector(selector).style.display = isVisible ? "block" : "none";
@@ -47,7 +47,7 @@ document.querySelector("#compile").addEventListener("click", (event) => {
     };
 
     postTex(data).then((data) => {
-      pdfurl = data.pdfurl;
+      outputUrl = data.outputUrl;
       changeVisibility("#loading-indicator", false);
 
       if (!data.failed) {
@@ -63,10 +63,10 @@ document.querySelector("#compile").addEventListener("click", (event) => {
 
 document.querySelector("#pdf-button").addEventListener("click", (e) => {
   changeVisibility("#pdf-output", false);
-  window.open(pdfurl);
+  window.open(outputUrl);
 });
 
 document.querySelector("#log-button").addEventListener("click", (e) => {
   changeVisibility("#log-output", false);
-  window.open(pdfurl);
+  window.open(outputUrl);
 });
