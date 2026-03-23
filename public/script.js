@@ -28,7 +28,8 @@ const visibilityChanger = (element_id) => {
 const showLoadingIndicator = visibilityChanger("running");
 const showOpenButton = visibilityChanger("tab_open_pdf");
 
-document.getElementById("compile").addEventListener("click", async function (e) {
+document.getElementById("form").addEventListener("submit", async function (e) {
+  e.preventDefault();
   let inputCoreConcept = document.getElementById("inputCoreConcept").value;
   let inputAuthorName = document.getElementById("inputAuthorName").value;
   let inputAffiliation = document.getElementById("inputAffiliation").value;
