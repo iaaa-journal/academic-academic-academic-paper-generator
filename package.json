@@ -1,7 +1,7 @@
 {
   "name": "academic-paper-generator",
-  "version": "2.0.0",
-  "description": "Academic Academic Academic Paper Generator - generates nonsense academic papers as PDF, entirely in the browser",
+  "version": "3.0.0",
+  "description": "Academic Academic Academic Paper Generator",
   "scripts": {
     "start": "npx serve public"
   },
