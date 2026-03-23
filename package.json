@@ -1,11 +1,9 @@
 {
-  "name": "tex-to-pdf-docker",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "academic-paper-generator",
+  "version": "2.0.0",
+  "description": "Academic Academic Academic Paper Generator - generates nonsense academic papers as PDF, entirely in the browser",
   "scripts": {
-    "start": "node ./src/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npx serve public"
   },
   "author": "IAAA",
   "license": "ISC",

@@ -8,4 +8,9 @@ Created by Yufeng Zhao and Jingtian Zong.
 Special thanks to Richard Huang.
 
 ## How it works
-Take your input, write the paper for you in TeX code, and convert it into PDF via a compiling server deployed on heroku.
+Takes your input, generates a paper in LaTeX, and compiles it to PDF entirely in the browser using [SwiftLaTeX](https://github.com/SwiftLaTeX/SwiftLaTeX) (WebAssembly). No server required.
+
+## Running locally
+```
+npx serve public
+```
