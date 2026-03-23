@@ -4,7 +4,6 @@
 //all the \(backslah) has to be written as \\(double backslahes)
 //when storing latex code as a string
 
-
 let template_latex_code = `
 \\documentclass[a4paper, times, 10pt, twocolumn]{article}
 \\usepackage[margin=1in]{geometry}
@@ -16,10 +15,9 @@ let template_latex_code = `
 % for title uppercase: https://tex.stackexchange.com/questions/335990/is-there-a-command-to-make-first-letter-upper-case
 % \\usepackage{mfirstuc}
 % \\usepackage{titlecaps}
-
-%\\usepackage{amsmath}
-%\\usepackage{graphicx}
-% \\usepackage{IEEEtran}
+\\usepackage{csquotes}
+\\usepackage{hyperref}
+\\usepackage{textcomp}
 
 
 \\begin{document}
@@ -62,30 +60,30 @@ subsection_content
 \\subsubsection{subsubtitle_text}
 subsubsection_content
 
-% The following shows typesetting power of LaTeX:
-% \\begin{align}
-% E_0 &= formulaValue^2                              \\
-% E &= \\frac{formulaValue^2}{\sqrt{1-\\frac{formulaValue^2}{formulaValue^2}}}
-% \\end{align}
-
-
 \\section{section_title}
 section3_content
 
 \\section*{Summary}
 summary_para
 
-\\begin{thebibliography}{9}
+\\begin{thebibliography}{3}
 \\bibitem{latexcompanion}
-reference_text, reference_text, and reference_text.
-\\textit{reference_text reference_text reference_text}.
-reference_text-reference_text, reference_text, reference_text, 1993.
+Zongker, Doug. (2002). \\enquote{Chicken Chicken Chicken: Chicken Chicken.}
+\\href{https://isotropic.org/papers/chicken.pdf}{\\textit{https://isotropic.org/papers/chicken.pdf}}
 
-\\bibitem{einstein}
-reference_text.
-\\textit{reference_text reference_text reference_text reference_text}.
-[\\textit{reference_text reference_text reference_text}].
-reference_text, 322(10):891–921, 1905.
+\\bibitem{latexcompanion}
+Zongker, Doug. (2007, February 16). 
+\\textit{Chicken Chicken Chicken}.
+[Humor Session]. American Association for the Advancement of Science, San Francisco, LA.
+\\href{https://www.youtube.com/watch?v=yL_-1d9OSdk}{\\textit{https://www.youtube.com/watch?v=yL\\_-1d9OSdk}}
+
+\\bibitem{latexcompanion}
+Mazières, David and Kohler, Eddie. (2005). \\enquote{Get me off Your Fucking Mailing List.}
+\\textit{International Journal of Advanced Computer Technology.}
+\\href{https://www.scs.stanford.edu/~dm/home/papers/remove.pdf}{\\textit{https://www.scs.stanford.edu/\\raisebox{0.5ex}{\\texttildelow}dm /home/papers/remove.pdf}}
+
+
+
 \\end{thebibliography}
 
 \\end{document}`;

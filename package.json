@@ -1,14 +1,9 @@
 {
-  "dependencies": {
-    "cloudconvert": "^2.2.1",
-    "http-status-codes": "^2.1.4"
-  },
-  "name": "bullshit-paper-generator",
-  "version": "0.0.1",
-  "description": "Bullshit paper generator",
-  "devDependencies": {},
+  "name": "academic-paper-generator",
+  "version": "2.0.0",
+  "description": "Academic Academic Academic Paper Generator - generates nonsense academic papers as PDF, entirely in the browser",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npx serve public"
   },
   "repository": {
     "type": "git",

@@ -1,5 +1,21 @@
 let pdfurl = "";
 
+const engine = new PdfTeXEngine();
+let engineReady = false;
+
+async function initEngine() {
+  try {
+    await engine.loadEngine();
+    engine.setTexliveEndpoint("https://texlive.texlyre.org/");
+    engineReady = true;
+    console.log("SwiftLaTeX PdfTeX engine ready");
+  } catch (err) {
+    console.error("Failed to initialize LaTeX engine:", err);
+  }
+}
+
+initEngine();
+
 const visibilityChanger = (element_id) => {
   console.log(element_id);
   return function (visible) {
@@ -12,27 +28,7 @@ const visibilityChanger = (element_id) => {
 const showLoadingIndicator = visibilityChanger("running");
 const showOpenButton = visibilityChanger("tab_open_pdf");
 
-const postTex = async (data) => {
-  const url = "/api/tex-to-pdf";
-
-  // Default options are marked with *
-  const response = await fetch(url, {
-    method: "POST", // *GET, POST, PUT, DELETE, etc.
-    mode: "cors", // no-cors, *cors, same-origin
-    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-    credentials: "same-origin", // include, *same-origin, omit
-    headers: {
-      "Content-Type": "application/json",
-      // 'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-    body: JSON.stringify(data), // body data type must match "Content-Type" header
-  });
-  return response.json(); // parses JSON response into native JavaScript objects
-};
-
-document.getElementById("compile").addEventListener("click", function (e) {
-  // get inputs
+document.getElementById("compile").addEventListener("click", async function (e) {
   let inputCoreConcept = document.getElementById("inputCoreConcept").value;
   let inputAuthorName = document.getElementById("inputAuthorName").value;
   let inputAffiliation = document.getElementById("inputAffiliation").value;
@@ -44,11 +40,14 @@ document.getElementById("compile").addEventListener("click", function (e) {
     console.log("no");
 
   }else{
+    if (!engineReady || !engine.isReady()) {
+      console.log("Engine not ready yet, please wait...");
+      return;
+    }
+
     console.log("yes");
     showLoadingIndicator(true);
     document.getElementById("notice").style.display = "none";
-
-    // https://www.w3schools.com/jsref/jsref_endswith.asp
 
     // remove " " "," ";" at the begin or end of input, if any
     while(inputCoreConcept.startsWith(" ")||inputCoreConcept.startsWith(",")||inputCoreConcept.startsWith(";")){
@@ -62,7 +61,6 @@ document.getElementById("compile").addEventListener("click", function (e) {
     console.log("done removing space");
 
     let inputCoreConcept_wordCount = WordCount(inputCoreConcept);
-    // always use one of the three below to compose latex, DO NOT USE inputCoreConcept DIRECTLY
     let inputCoreConceptNoMark = inputCoreConcept;
     let inputCoreConceptMark = inputCoreConcept;
     let inputCoreConceptAsSentence;
@@ -90,26 +88,20 @@ document.getElementById("compile").addEventListener("click", function (e) {
     let inputCoreConceptCap = titleCase(inputCoreConceptNoMark);
     inputAuthorName = titleCase(inputAuthorName);
     inputAffiliation = titleCase(inputAffiliation);
-    // console.log(inputCoreConceptWSpace);
 
-    //https://stackoverflow.com/questions/18679576/counting-words-in-string/30335883
     function WordCount(str) {
       return str.split(" ").length;
     }
 
-    //https://www.w3schools.com/js/js_random.asp
     function randomize_length(min, max) {
       return Math.floor(Math.random() * (max - min)) + min;
     }
 
     function titleCase(str) {
-      var splitStr = str.toLowerCase().split(' ');
+      var splitStr = str.split(' ');
       for (var i = 0; i < splitStr.length; i++) {
-        // You do not need to check if i is larger than splitStr length, as your for does that for you
-        // Assign it back to the array
         splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
       }
-      // Directly return the joined string
       return splitStr.join(' ');
     }
 
@@ -118,7 +110,6 @@ document.getElementById("compile").addEventListener("click", function (e) {
       return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-    // generate paper content
     if (inputCoreConcept.length > 0) {
       let abstract_para_length = randomize_length(120, 160);
       let intro_para_length = randomize_length(100, 150);
@@ -136,8 +127,6 @@ document.getElementById("compile").addEventListener("click", function (e) {
         summary_para_length / inputCoreConcept_wordCount
       );
 
-      //      /placeholder/gi    syntax for replace "placeholder" global and ignore case flags
-      // not sure why this line doesn't work as template_latex_code.replace("placeholder", input_phrase);
       let modified_latex_code = template_latex_code
       .replace(/paper_title_text/gi, inputCoreConceptCap)
       .replace(/authorName/gi, inputAuthorName)
@@ -183,7 +172,6 @@ document.getElementById("compile").addEventListener("click", function (e) {
           inputCoreConceptAsSentence +
           `\n\n`;
         }
-        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
         let replaceThis = new RegExp(content, "gi");
         modified_latex_code = modified_latex_code.replace(
           replaceThis,
@@ -193,25 +181,29 @@ document.getElementById("compile").addEventListener("click", function (e) {
 
       console.log(modified_latex_code);
 
-      const modified_latex_code_base64 = btoa(
-        unescape(encodeURIComponent(modified_latex_code))
-      );
+      try {
+        engine.writeMemFSFile("main.tex", modified_latex_code);
+        engine.setEngineMainFile("main.tex");
+        const result = await engine.compileLaTeX();
 
-      let data = {
-        coreConcept: inputCoreConcept,
-        authorName: inputAuthorName,
-        affiliation: inputAffiliation,
-        texCode: {
-          base64: modified_latex_code_base64,
-        },
-      };
-      console.log(data);
+        console.log("Compilation status:", result.status);
+        console.log("Compilation log:", result.log);
 
-      postTex(data).then((data) => {
-        pdfurl = data.pdfurl;
+        if (result.status === 0 && result.pdf) {
+          const pdfBlob = new Blob([result.pdf], { type: "application/pdf" });
+          pdfurl = URL.createObjectURL(pdfBlob);
+          showLoadingIndicator(false);
+          showOpenButton(true);
+        } else {
+          showLoadingIndicator(false);
+          console.error("LaTeX compilation failed. Log:", result.log);
+          alert("Compilation failed. Check the browser console for details.");
+        }
+      } catch (err) {
         showLoadingIndicator(false);
-        showOpenButton(true);
-      });
+        console.error("Compilation error:", err);
+        alert("Compilation error. Check the browser console for details.");
+      }
     }
   }
 });
